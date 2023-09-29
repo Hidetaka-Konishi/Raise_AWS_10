@@ -5,7 +5,7 @@
 4. 一番下までスクロールして、「パラメータを作成」をクリックします。
 5. MasterUserPassword: '{{resolve:ssm-secure:[パラメータの名前]:1}}'のようにテンプレートに記載します。
 
-# CloudFormationテンプレートの作成手順
+# CloudFormationテンプレートの作成
 ## AWS::EC2::Volume
 以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
 
