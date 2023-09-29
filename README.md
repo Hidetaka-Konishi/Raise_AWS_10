@@ -9,13 +9,22 @@
 ## EC2
 以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
 
-・ Retainはスタックが削除されたときにリソースを保持
-
-・ Deleteはスタックが削除されたときにリソースも削除
-
-・ SnapshotはAmazon RDSとAmazon EBSボリュームのみに適用されてリソースが削除されたときにスナップショットを作成
-
 ![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
+
+[DeletionPolicy] 
+
+スタックが削除される際にリソースをどのようにするかを定義する。
+
+Delete：スタックが削除されたときにリソースも削除する。
+
+Retain：スタックが削除されたときにリソースを保持する。手動で削除するまで保持される。
+
+Snapshot：RDSとEBSのみに適用されるもので、スタック削除時にリソースも削除されるが同時にスナップショットを作成する。
+
+[UpdateReplacePolicy]
+
+スタックのリソースが更新されたときにリソースををどのようにするかを定義する。
+
 
 
 # CloudFormationでスタックを作成する手順
