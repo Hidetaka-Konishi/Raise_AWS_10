@@ -14,6 +14,8 @@
 
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
+AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
+
 AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
 
 NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
@@ -26,9 +28,6 @@ AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要
 
 ### EC2VolumeとEC2VolumeAttachment
 追加のEBSが必要でなければ記述する必要はない。
-
-### AWS::EC2::NetworkInterfaceAttachment
-AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
 
 ## RDS
 ### AWS::RDS::DBInstance
