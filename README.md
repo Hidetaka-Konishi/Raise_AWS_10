@@ -43,6 +43,9 @@ AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッ�
 
 NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
 
+### AWS::EC2::Volume
+AWS::EC2::InstanceのBlockDeviceMappingsでEbsのSnapshotIdを指定した場合は、AWS::EC2::VolumeでSnapshotIdを指定する必要はない。
+
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
