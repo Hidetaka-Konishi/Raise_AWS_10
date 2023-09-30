@@ -60,6 +60,9 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 #### MasterUserPassword
 RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 
+#### KmsKeyId
+arn:aws:kms~のawsの部分を削除して、${AWS::Partition}に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
+
 ### AWS::RDS::DBSubnetGroup
 #### DBSubnetGroupName
 既に作成済みのDBサブネットグループは記述することができない。
