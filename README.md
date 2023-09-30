@@ -60,6 +60,10 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 #### MasterUserPassword
 RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 
+### AWS::RDS::DBSubnetGroup
+#### DBSubnetGroupName
+既に作成済みのDBサブネットグループは記述することができない。
+
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
