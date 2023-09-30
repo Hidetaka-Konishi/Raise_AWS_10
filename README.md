@@ -32,6 +32,7 @@ AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要
 
 ## RDS
 ### AWS::RDS::DBInstance
+#### DeletionPolicy,UpdateReplacePolicy
 以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
 
 ![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
@@ -55,6 +56,9 @@ Delete：更新前のリソースが削除される。
 Retain：更新前のリソースが保管される。手動で削除しない限り保管される。
 
 Snapshot：更新前のRDSやEBSのスナップショットを作成する。
+
+#### MasterUserPassword
+RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
