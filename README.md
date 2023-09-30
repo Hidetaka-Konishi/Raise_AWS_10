@@ -11,6 +11,15 @@
 
 !Ref：!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
 
+Fn::SubとAWS::StackName：動的なリソース名をつけるときに必要なもの。以下は例のコード
+
+```yaml
+BucketName:
+    Fn::Sub:
+      - "${StackName}-s3"
+      - StackName: 
+          Ref: "AWS::StackName"
+```
 
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
@@ -26,8 +35,12 @@ AWS::EC2::InstanceのBlockDeviceMappingsでEbsのSnapshotIdを指定した場合
 ### AWS::EC2::NetworkInterface
 AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
 
-### EC2VolumeとEC2VolumeAttachment
+### AWS::EC2::VolumeとAWS::EC2::VolumeAttachment
 追加のEBSが必要でなければ記述する必要はない。
+
+### AWS::EC2::SecurityGroup
+#### GroupName
+作成済みのセキュリティーグループ名を記述することはできない。
 
 ## RDS
 ### AWS::RDS::DBInstance
