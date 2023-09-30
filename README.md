@@ -41,7 +41,7 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 ### AWS::EC2::NetworkInterfaceAttachment
 AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
 
-NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので
+NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
 
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
