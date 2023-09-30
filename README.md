@@ -6,7 +6,14 @@
 5. MasterUserPassword: '{{resolve:ssm-secure:[パラメータの名前]:1}}'のようにテンプレートに記載します。
 
 # CloudFormationテンプレートの作成
-## AWS::EC2::Volume
+## 基礎知識
+論理ID：プログラミングでいう変数のようなもの。
+
+!Ref：!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
+
+
+## EC2
+### AWS::EC2::Volume
 以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
 
 ![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
@@ -30,6 +37,11 @@ Delete：更新前のリソースが削除される。
 Retain：更新前のリソースが保管される。手動で削除しない限り保管される。
 
 Snapshot：更新前のRDSやEBSのスナップショットを作成する。
+
+### AWS::EC2::NetworkInterfaceAttachment
+AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
+
+NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので
 
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
