@@ -13,7 +13,25 @@
 
 
 ## EC2
+### AWS::EC2::NetworkInterfaceAttachment
+AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
+
+NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
+
 ### AWS::EC2::Volume
+AWS::EC2::InstanceのBlockDeviceMappingsでEbsのSnapshotIdを指定した場合は、AWS::EC2::VolumeでSnapshotIdを指定する必要はない。
+
+### AWS::EC2::NetworkInterface
+AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
+
+### EC2VolumeとEC2VolumeAttachment
+追加のEBSが必要でなければ記述する必要はない。
+
+### AWS::EC2::NetworkInterfaceAttachment
+AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
+
+## RDS
+### AWS::RDS::DBInstance
 以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
 
 ![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
@@ -37,23 +55,6 @@ Delete：更新前のリソースが削除される。
 Retain：更新前のリソースが保管される。手動で削除しない限り保管される。
 
 Snapshot：更新前のRDSやEBSのスナップショットを作成する。
-
-### AWS::EC2::NetworkInterfaceAttachment
-AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
-
-NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
-
-### AWS::EC2::Volume
-AWS::EC2::InstanceのBlockDeviceMappingsでEbsのSnapshotIdを指定した場合は、AWS::EC2::VolumeでSnapshotIdを指定する必要はない。
-
-### AWS::EC2::NetworkInterface
-AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
-
-### EC2VolumeとEC2VolumeAttachment
-追加のEBSが必要でなければ記述する必要はない。
-
-### AWS::EC2::NetworkInterfaceAttachment
-AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
 
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
