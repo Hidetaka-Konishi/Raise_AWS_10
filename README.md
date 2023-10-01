@@ -31,6 +31,9 @@ Resources:
 
 ![スクリーンショット 2023-10-01 113024](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/d473831a-4db8-4c10-ac39-1e9db382a2d6)
 
+## VPC
+### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
+AWS::EC2::VPCDHCPOptionsAssociationのDhcpOptionsIdは`!Ref EC2DHCPOptions`のようにAWS::EC2::DHCPOptionsの論理IDを指定しなければならない。
 
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
