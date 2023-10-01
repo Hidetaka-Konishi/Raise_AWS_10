@@ -29,6 +29,9 @@ Resources:
 ```
 `Parameters:`、`RandomName:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`RandomName`とタイトルと文字列型で入力する欄が現れる。`BucketName: !Sub ${RandomName}-s3buket`の`${RandomName}-s3buket`の部分はPythonでいう`f"{RandomName}-s3buket"`と同じようなもの。
 
+![スクリーンショット 2023-10-01 113024](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/d473831a-4db8-4c10-ac39-1e9db382a2d6)
+
+
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
 AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
