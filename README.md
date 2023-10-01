@@ -11,15 +11,23 @@
 
 !Ref：!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
 
-Fn::SubとAWS::StackName：動的なリソース名をつけるときに必要なもの。以下は例のコード
-
+【動的なリソース名をつける方法】
 ```yaml
-BucketName:
-    Fn::Sub:
-      - "${StackName}-s3"
-      - StackName: 
-          Ref: "AWS::StackName"
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "S3"
+
+Parameters:
+  RandomName:
+    Type: String
+
+Resources:
+    S3Bucket:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: !Sub ${RandomName}-s3buket
+            BucketEncryption: 
 ```
+`Parameters:`、`RandomName:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`RandomName`とタイトルと文字列型で入力する欄が現れる。`BucketName: !Sub ${RandomName}-s3buket`の`${RandomName}-s3buket`の部分はPythonでいう`f"{RandomName}-s3buket"`と同じようなもの。
 
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
