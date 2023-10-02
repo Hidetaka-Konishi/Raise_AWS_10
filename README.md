@@ -7,11 +7,13 @@
 
 # CloudFormationテンプレートの作成
 ## 基礎知識
-論理ID：プログラミングでいう変数のようなもの。
+### 論理ID
+プログラミングでいう変数のようなもの。
 
-!Ref：!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
+### !Ref
+!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
 
-【動的なリソース名をつける方法】
+### 動的なリソース名をつける方法
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "S3"
@@ -30,6 +32,25 @@ Resources:
 `Parameters:`、`RandomName:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`RandomName`とタイトルと文字列型で入力する欄が現れる。`BucketName: !Sub ${RandomName}-s3buket`の`${RandomName}-s3buket`の部分はPythonでいう`f"{RandomName}-s3buket"`と同じようなもの。
 
 ![スクリーンショット 2023-10-01 113024](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/d473831a-4db8-4c10-ac39-1e9db382a2d6)
+
+### 動的な値を他のテンプレートでパラメータストアから参照する方法
+
+まず、定義する側のテンプレートで以下を記述する。
+```yaml
+VPCIDParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties: 
+      Name: !Sub "/${RandomName}/VPC-ID"
+      Type: "String"
+      Value: !Ref EC2VPC
+```
+Nameの値はパラメータストアに保存する文字列で、上記で解説した「動的なリソース名をつける方法」を使って`RandomName`の部分を動的な値にしている。Valueは参照する側のテンプレートで必要になる情報が書かれている論理IDを指定している。
+
+次に、参照する側のテンプレートで以下を記述する。
+```yaml
+!Sub "{{resolve:ssm:/${VPCName}/VPC-ID}}"
+```
+`/${VPCName}/VPC-ID`の部分は定義する側のテンプレートの`/${RandomName}/VPC-ID`と同じになるようにする必要があるので、Parametersを使って定義した側と同じ文字列を指定する必要がある。
 
 ## VPC
 ### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
