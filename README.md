@@ -11,7 +11,7 @@
 プログラミングでいう変数のようなもの。
 
 ### !Ref
-!Ref 論理ID と指定することで論理IDに書かれている情報を得ることができる。
+`!Ref 論理ID`と指定することで論理IDに書かれている情報を得ることができる。
 
 ### 動的なリソース名をつける方法
 ```yaml
@@ -44,7 +44,7 @@ VPCIDParameter:
       Type: "String"
       Value: !Ref EC2VPC
 ```
-Nameの値はパラメータストアに保存する文字列で、上記で解説した「動的なリソース名をつける方法」を使って`RandomName`の部分を動的な値にしている。Valueは参照する側のテンプレートで必要になる情報が書かれている論理IDを指定している。
+`Name`の値はパラメータストアに保存する文字列で、上記で解説した「動的なリソース名をつける方法」を使って`RandomName`の部分を動的な値にしている。`Value`は参照する側のテンプレートで必要になる情報が書かれている論理IDを指定している。
 
 次に、参照する側のテンプレートで以下を記述する。
 ```yaml
@@ -54,21 +54,21 @@ Nameの値はパラメータストアに保存する文字列で、上記で解�
 
 ## VPC
 ### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
-AWS::EC2::VPCDHCPOptionsAssociationのDhcpOptionsIdは`!Ref EC2DHCPOptions`のようにAWS::EC2::DHCPOptionsの論理IDを指定しなければならない。
+`AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
 
 ## EC2
 ### AWS::EC2::NetworkInterfaceAttachment
-AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
+`AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
 
-AWS::EC2::NetworkInterfaceAttachmentはEC2インスタンスにENIをアタッチする際に使用される。
+`AWS::EC2::NetworkInterfaceAttachment`はEC2インスタンスにENIをアタッチする際に使用される。
 
-NetworkInterfaceId：アタッチするENIのID。ここで指定するENIは動的に変化するので、!Ref EC2NetworkInterface のようにして参照させる必要がある。
+`NetworkInterfaceId`はアタッチするENIのID。ここで指定するENIは動的に変化するので、`!Ref EC2NetworkInterface`のようにして参照させる必要がある。
 
 ### AWS::EC2::Volume
-AWS::EC2::InstanceのBlockDeviceMappingsでEbsのSnapshotIdを指定した場合は、AWS::EC2::VolumeでSnapshotIdを指定する必要はない。
+`AWS::EC2::Instance`の`BlockDeviceMappings`で`Ebs`の`SnapshotId`を指定した場合は、`AWS::EC2::Volume`で`SnapshotId`を指定する必要はない。
 
 ### AWS::EC2::NetworkInterface
-AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要はない。
+`AWS::EC2::Instance`で`NetworkInterfaces`を設定していれば記述する必要はない。
 
 ### AWS::EC2::VolumeとAWS::EC2::VolumeAttachment
 追加のEBSが必要でなければ記述する必要はない。
@@ -80,7 +80,7 @@ AWS::EC2::InstanceでNetworkInterfacesを設定していれば記述する必要
 ## RDS
 ### AWS::RDS::DBInstance
 #### DeletionPolicy,UpdateReplacePolicy
-以下の写真のようにDeletionPolicyとUpdateReplacePolicyのキーを作成して、Retain,Delete,Snapshotのどれか一つを値として設定する。
+以下の写真のように`DeletionPolicy`と`UpdateReplacePolicy`のキーを作成して、`Retain`, `Delete`, `Snapshot`のどれか一つを値として設定する。
 
 ![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
 
@@ -108,7 +108,7 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 
 #### KmsKeyId
-arn:aws:kms~のawsの部分を削除して、${AWS::Partition}に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
+`arn:aws:kms~`の`aws`の部分を削除して、`${AWS::Partition}`に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
 
 ### AWS::RDS::DBSubnetGroup
 #### DBSubnetGroupName
