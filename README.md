@@ -57,6 +57,9 @@ VPCIDParameter:
 `AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
 
 ## EC2
+### AWS::EC2::Instance
+`BlockDeviceMappings`の`SnapshotId`に既存のスナップショットIDを使用しないのであれば記述する必要はない。
+
 ### AWS::EC2::NetworkInterfaceAttachment
 `AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
 
