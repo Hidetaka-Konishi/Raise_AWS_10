@@ -11,10 +11,13 @@
 プログラミングでいう変数のようなもの。
 
 ### !Ref
-`!Ref 論理ID`と指定することで論理IDに書かれている情報を得ることができる。
+リソースIDやパラメータの値を取得するために使われるもの。
 
 ### !Sub
-`Parameters`で記述したパラメータをコード内で参照するときに使うもの。例えば、`BucketName: !Sub ${Prefix}-s3buket`の`${Prefix}-s3buket`の部分はPythonでいう`f"{Prefix}-s3buket"`と同じようなもの。
+動的に変化する文字列を扱う際に使うもの。例えば、`!Sub ${Prefix}-s3buket`や`!Sub "raise10-subnet-public2-${EC2Subnet2.AvailabilityZone}"`のようにして利用する。
+
+### !GetAtt
+特定のリソースの情報を取得するために使うもの。文法は`!GetAtt [論理ID].[リソース名]`となる。例えば、`!GetAtt EC2Subnet2.AvailabilityZone`とすることで`EC2Subnet2`の`AvailabilityZone`の情報を取得することができる。
 
 ### 動的なリソース名をつける方法
 ```yaml
@@ -57,8 +60,14 @@ VPCIDParameter:
 `/${VPCPrefix}/VPC-ID`の部分は定義する側のテンプレートの`/${Prefix}/VPC-ID`と同じになるようにする必要があるので、Parametersを使って定義した側と同じ文字列を指定する必要がある。
 
 ## VPC
-### EC2VPC
-`Tags`で記述した名前はVPC本体の名前になる。
+### AWS::EC2::VPC
+#### Tags
+ここで記述した名前はVPC本体の名前になる。
+
+### AWS::EC2::Subnet
+#### MapPublicIpOnLaunch
+EC2インスタンスがそのサブネットに配置される際に、パブリックIPアドレスを自動で割り当てるかを指定するもの。
+
 
 ### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
 `AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
