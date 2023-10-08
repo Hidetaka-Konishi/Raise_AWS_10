@@ -124,13 +124,7 @@ EC2インスタンスにENIをアタッチする際に使用されるもので�
 
 ## RDS
 ### AWS::RDS::DBInstance
-#### DeletionPolicy,UpdateReplacePolicy
-以下の写真のように`DeletionPolicy`と`UpdateReplacePolicy`のキーを作成して、`Retain`, `Delete`, `Snapshot`のどれか一つを値として設定する。
-
-![スクリーンショット 2023-09-29 191446](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/171fcc0d-0930-4866-82c7-edba67dcba32)
-
-[DeletionPolicy] 
-
+#### DeletionPolicy
 スタックが削除される際にリソースをどのようにするかを定義する。
 
 Delete：スタックが削除されたときにリソースも削除する。
@@ -139,7 +133,7 @@ Retain：スタックが削除されたときにリソースを保持する。�
 
 Snapshot：RDSやEBSのスタック削除時にリソースも削除されるが同時にスナップショットを作成する。
 
-[UpdateReplacePolicy]
+#### UpdateReplacePolicy
 
 スタックのリソースが更新されたときにリソースををどのようにするかを定義する。
 
@@ -149,9 +143,15 @@ Retain：更新前のリソースが保管される。手動で削除しない�
 
 Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 
+#### AllocatedStorage
+「ストレージ」のこと。
 #### MasterUserPassword
 RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
+#### BackupRetentionPeriod
+「自動バックアップ」のことであり、指定する数字はバックアップされる日数を意味する。
 
+#### PreferredMaintenanceWindow
+RDSインスタンスの30分間のメンテナンスを行う時間帯を指定する。マネジメントコンソール上ではこの情報を確認することはできない。
 #### KmsKeyId
 `arn:aws:kms~`の`aws`の部分を削除して、`${AWS::Partition}`に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
 
