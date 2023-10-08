@@ -13,6 +13,9 @@
 ### !Ref
 `!Ref 論理ID`と指定することで論理IDに書かれている情報を得ることができる。
 
+### !Sub
+`Parameters`で記述したパラメータをコード内で参照するときに使うもの。例えば、`BucketName: !Sub ${Prefix}-s3buket`の`${Prefix}-s3buket`の部分はPythonでいう`f"{Prefix}-s3buket"`と同じようなもの。
+
 ### 動的なリソース名をつける方法
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -30,7 +33,7 @@ Resources:
             BucketName: !Sub ${Prefix}-s3buket
             BucketEncryption: 
 ```
-`Parameters:`、`Prefix:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`Prefix`とタイトルと文字列型で入力する欄が現れる。`Description`はこのパラメータが何を意味するのかを説明している。`BucketName: !Sub ${Prefix}-s3buket`の`${Prefix}-s3buket`の部分はPythonでいう`f"{Prefix}-s3buket"`と同じようなもの。
+`Parameters:`、`Prefix:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`Prefix`とタイトルと文字列型で入力する欄が現れる。`Description`はこのパラメータが何を意味するのかを説明している。
 
 ![スクリーンショット 2023-10-08 115246](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/843d1c9e-aa47-4b5b-8694-a9e4a6825cf1)
 
@@ -54,6 +57,9 @@ VPCIDParameter:
 `/${VPCPrefix}/VPC-ID`の部分は定義する側のテンプレートの`/${Prefix}/VPC-ID`と同じになるようにする必要があるので、Parametersを使って定義した側と同じ文字列を指定する必要がある。
 
 ## VPC
+### EC2VPC
+`Tags`で記述した名前はVPC本体の名前になる。
+
 ### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
 `AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
 
