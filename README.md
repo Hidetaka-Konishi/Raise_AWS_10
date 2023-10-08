@@ -61,7 +61,7 @@ VPCIDParameter:
 
 ## VPC
 ### AWS::EC2::VPC
-#### Tags
+#### Value
 ここで記述した名前はVPC本体の名前になる。
 
 ### AWS::EC2::Subnet
@@ -81,7 +81,22 @@ VPCにインターネットゲートウェイまたは仮想プライベート�
 
 ## EC2
 ### AWS::EC2::Instance
-`BlockDeviceMappings`の`SnapshotId`に既存のスナップショットIDを使用しないのであれば記述する必要はない。
+#### SubnetId
+EC2インスタンスをVPCのどのサブネットに配置するのかを指定する。
+#### EbsOptimized
+EBS最適化のことであり、ECインスタンスの情報が書かれたページの「ストレージ」で確認することができる。
+#### SourceDestCheck
+ECインスタンスの情報が書かれたページの「ネットワークインターフェース」の「送信元/送信先チェック」のこと。
+#### SnapshotId
+既存のスナップショットIDを使用しないのであれば記述する必要はない。
+#### Encrypted
+「暗号化済み」のこと。
+#### Value
+EC2インスタンスの名前を指定する。
+#### HibernationOptions
+「停止 - 休止動作」のこと。
+#### EnclaveOptions
+「Enclaves のサポート」のこと。
 
 ### AWS::EC2::NetworkInterfaceAttachment
 `AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
