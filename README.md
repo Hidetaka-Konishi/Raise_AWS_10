@@ -99,24 +99,28 @@ EC2インスタンスの名前を指定する。
 「Enclaves のサポート」のこと。
 
 ### AWS::EC2::NetworkInterfaceAttachment
-`AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
-
-`AWS::EC2::NetworkInterfaceAttachment`はEC2インスタンスにENIをアタッチする際に使用される。
-
-`NetworkInterfaceId`はアタッチするENIのID。ここで指定するENIは動的に変化するので、`!Ref EC2NetworkInterface`のようにして参照させる必要がある。
+EC2インスタンスにENIをアタッチする際に使用されるもので、`AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
+#### NetworkInterfaceId
+アタッチするENIのID。ここで指定するENIは動的に変化するので、`!Ref EC2NetworkInterface`のようにして参照させる必要がある。
 
 ### AWS::EC2::Volume
-`AWS::EC2::Instance`の`BlockDeviceMappings`で`Ebs`の`SnapshotId`を指定した場合は、`AWS::EC2::Volume`で`SnapshotId`を指定する必要はない。
+#### SnapshotId
+`AWS::EC2::Instance`の`BlockDeviceMappings`で`Ebs`の`SnapshotId`を指定した場合は指定する必要はない。
 
 ### AWS::EC2::NetworkInterface
 `AWS::EC2::Instance`で`NetworkInterfaces`を設定していれば記述する必要はない。
 
-### AWS::EC2::VolumeとAWS::EC2::VolumeAttachment
+### AWS::EC2::Volume
+追加のEBSが必要でなければ記述する必要はない。
+
+### AWS::EC2::VolumeAttachment
 追加のEBSが必要でなければ記述する必要はない。
 
 ### AWS::EC2::SecurityGroup
 #### GroupName
 作成済みのセキュリティーグループ名を記述することはできない。
+#### IpProtocol
+-1はすべてのプロトコルを意味する。
 
 ## RDS
 ### AWS::RDS::DBInstance
