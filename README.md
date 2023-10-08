@@ -67,10 +67,14 @@ VPCIDParameter:
 ### AWS::EC2::Subnet
 #### MapPublicIpOnLaunch
 EC2インスタンスがそのサブネットに配置される際に、パブリックIPアドレスを自動で割り当てるかを指定するもの。
-
+####  AvailabilityZone
+`!Sub "${AWS::Region}b"`の`AWS::Region`はスタックが作成されたリージョン名が入る。
 
 ### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
 `AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
+
+### AWS::EC2::RouteTable
+AWSが自動的に一つルートテーブルを作成するため、実際に作成されたVPCのルートテーブルの数はテンプレートより一つ多くなる。
 
 ## EC2
 ### AWS::EC2::Instance
