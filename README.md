@@ -76,6 +76,12 @@ EC2インスタンスがそのサブネットに配置される際に、パブ�
 ### AWS::EC2::RouteTable
 AWSが自動的に一つルートテーブルを作成するため、実際に作成されたVPCのルートテーブルの数はテンプレートより一つ多くなる。
 
+### AWS::EC2::Route
+特定のルートテーブルにルートを追加するために使用するもの。
+
+### AWS::EC2::VPCGatewayAttachment
+VPCにインターネットゲートウェイまたは仮想プライベートゲートウェイを関連づけるためのもの。
+
 ## EC2
 ### AWS::EC2::Instance
 `BlockDeviceMappings`の`SnapshotId`に既存のスナップショットIDを使用しないのであれば記述する必要はない。
