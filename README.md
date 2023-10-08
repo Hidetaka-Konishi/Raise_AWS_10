@@ -70,9 +70,6 @@ EC2インスタンスがそのサブネットに配置される際に、パブ�
 ####  AvailabilityZone
 `!Sub "${AWS::Region}b"`の`AWS::Region`はスタックが作成されたリージョン名が入る。
 
-### AWS::EC2::VPCDHCPOptionsAssociationとAWS::EC2::DHCPOptions
-`AWS::EC2::VPCDHCPOptionsAssociation`の`DhcpOptionsId`は`!Ref EC2DHCPOptions`のように`AWS::EC2::DHCPOptions`の論理IDを指定しなければならない。
-
 ### AWS::EC2::RouteTable
 AWSが自動的に一つルートテーブルを作成するため、実際に作成されたVPCのルートテーブルの数はテンプレートより一つ多くなる。
 
