@@ -149,11 +149,16 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 #### BackupRetentionPeriod
 「自動バックアップ」のことであり、指定する数字はバックアップされる日数を意味する。
-
 #### PreferredMaintenanceWindow
 RDSインスタンスの30分間のメンテナンスを行う時間帯を指定する。マネジメントコンソール上ではこの情報を確認することはできない。
 #### KmsKeyId
 `arn:aws:kms~`の`aws`の部分を削除して、`${AWS::Partition}`に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
+#### MonitoringInterval
+RDSインスタンスの情報が書かれたページの「モニタリング」でデータが取得されていない場合は0となる。
+#### CACertificateIdentifier
+「認証機関」のこと。
+#### SourceSecurityGroupOwnerId
+セキュリティグループのIDはAWS全体で一意であるため、どのAWSアカウントでスタックをデプロイしても指定したセキュリティグループのIDを動的に使用できるようにするために`AWS::AccountId`と記述する。
 
 ### AWS::RDS::DBSubnetGroup
 #### DBSubnetGroupName
