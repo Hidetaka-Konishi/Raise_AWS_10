@@ -1,4 +1,4 @@
-# CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順。
+# CloudFormationテンプレートの中で扱うAWSリソースのパスワードをパラメータストアで管理する手順。
 1. マネジメントコンソールの検索欄に「Systems Manager」と検索して選択します。
 2. 左のサイドバーの「パラメータストア」→「パラメータの作成」をクリックします。
 3. 「名前」で名前を設定し、「タイプ」で「安全な文字列」を選択します。「値」で管理してほしいAWSリソースのパスワードを入力します。
@@ -146,7 +146,7 @@ Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 #### AllocatedStorage
 「ストレージ」のこと。
 #### MasterUserPassword
-RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをSystems Manager Parameter Storeで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
+RDSのパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをパラメータストアで管理する手順」に沿ってパスワードを暗号化して管理する必要がある。
 #### BackupRetentionPeriod
 「自動バックアップ」のことであり、指定する数字はバックアップされる日数を意味する。
 #### PreferredMaintenanceWindow
