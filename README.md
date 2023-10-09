@@ -173,6 +173,18 @@ RDSインスタンスの情報が書かれたページの「モニタリング�
 #### Type
 `forward`は転送を意味する。
 
+### AWS::ElasticLoadBalancingV2::TargetGroup
+#### HealthCheckEnabled
+マネジメントコンソール上では確認することができないが通常はtrueにすることが推奨されている。
+#### stickiness.enabled
+「維持設定」のこと。
+#### stickiness.type
+マネジメントコンソール上では確認することができない。ここでは、スティッキネスの種類を指定する。スティッキネスは連続する通信を同じサーバーに送信する機能。`lb_cookie`はALBが自動で生成するcookieを使用してスティッキネスを実現するということ。
+#### stickiness.lb_cookie.duration_seconds
+ALBが自動で生成するcookieを使用したスティッキネスの有効期限。ここで指定する数字は秒数を意味する。
+#### stickiness.app_cookie.duration_seconds
+アプリケーションが生成するcookieを使用したスティッキネスの有効期限。
+
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
