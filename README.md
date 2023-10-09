@@ -99,7 +99,7 @@ EC2インスタンスの名前を指定する。
 「Enclaves のサポート」のこと。
 
 ### AWS::EC2::NetworkInterfaceAttachment
-EC2インスタンスにENIをアタッチする際に使用されるもので、`AWS::EC2::InstanceでNetworkInterfaces`を設定していれば記述する必要はない。
+EC2インスタンスにENIをアタッチする際に使用されるもので、`AWS::EC2::Instance`で`NetworkInterfaces`を設定していれば記述する必要はない。
 #### NetworkInterfaceId
 アタッチするENIのID。ここで指定するENIは動的に変化するので、`!Ref EC2NetworkInterface`のようにして参照させる必要がある。
 
