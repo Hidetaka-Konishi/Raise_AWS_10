@@ -185,6 +185,19 @@ ALBが自動で生成するcookieを使用したスティッキネスの有効�
 #### stickiness.app_cookie.duration_seconds
 アプリケーションが生成するcookieを使用したスティッキネスの有効期限。
 
+## S3
+### AWS::S3::Bucket
+#### ServerSideEncryptionByDefault
+「デフォルトの暗号化」のこと。
+#### SSEAlgorithm
+`AES256`を指定することでSSE-S3、`aws:kms`を指定することでSSE-KMSの暗号化タイプになる。
+
+### AWS::S3::StorageLens
+#### BucketLevel
+情報を取得したいバケットを指定する。{}は何も設定されていないデフォルトの状態で、このデフォルトの状態はすべてのバケットに対して情報を取得できることを意味する。
+#### IsEnabled
+StorageLensを作成した後に、実際にそれを有効にするのかを指定する。
+
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
