@@ -164,6 +164,15 @@ RDSインスタンスの情報が書かれたページの「モニタリング�
 #### DBSubnetGroupName
 既に作成済みのDBサブネットグループは記述することができない。
 
+## ALB
+### AWS::ElasticLoadBalancingV2::LoadBalancer
+#### Subnets
+スキームが`Internet-facing`に設定されている場合は、インターネットを利用して通信するのでここで指定するサブネットはパブリックサブネットになる。
+
+### AWS::ElasticLoadBalancingV2::Listener
+#### Type
+`forward`は転送を意味する。
+
 # CloudFormationでスタックを作成する手順
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
