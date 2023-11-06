@@ -38,7 +38,7 @@ Resources:
 ```
 `Parameters:`、`Prefix:`、`Type: String`と記述することで、以下の写真のようにマネジメントコンソールからスタックを作成する際に`Prefix`というタイトルと文字列型で入力する欄が現れる。`Description`はこのパラメータが何を意味するのかを説明している。
 
-![スクリーンショット 2023-10-08 115246](https://github.com/Hidetaka-Konishi/Raise_AWS_10/assets/142459457/843d1c9e-aa47-4b5b-8694-a9e4a6825cf1)
+![](./image/parameter.png)
 
 ### 動的な値を他のテンプレートでパラメータストアから参照する方法
 
