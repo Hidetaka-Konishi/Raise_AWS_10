@@ -11,13 +11,32 @@
 プログラミングでいう変数のようなもの。
 
 ### !Ref
-リソースIDやパラメータの値を取得するために使われるもの。
+論理IDのIDまたは名前を取得するもの。
 
 ### !Sub
 動的に変化する文字列を扱う際に使うもの。例えば、`!Sub ${Prefix}-s3buket`や`!Sub "raise10-subnet-public2-${EC2Subnet2.AvailabilityZone}"`のようにして利用する。
 
 ### !GetAtt
-特定のリソースの情報を取得するために使うもの。文法は`!GetAtt [論理ID].[リソース名]`となる。例えば、`!GetAtt EC2Subnet2.AvailabilityZone`とすることで`EC2Subnet2`の`AvailabilityZone`の情報を取得することができる。
+論理IDの指定したリソース名からそのリソース情報を取得するもの。文法は`!GetAtt [論理ID].[リソース名]`となる。例えば、`!GetAtt EC2Subnet2.AvailabilityZone`とすることで`EC2Subnet2`の`AvailabilityZone`の情報を取得することができる。
+
+### Export
+`!Ref`で取得したIDまたは名前を他のCloudFormationテンプレートで参照可能にするもの。文法は以下のようになる。
+
+```
+Outputs:
+    VPCID:
+        Description: "The ID of the created VPC"
+        Value: !Ref MyVPC
+        Export:
+            Name: !Sub "${Prefix}-VPCID"
+```
+ここでは`!Ref`で指定した`MyVPC`という論理IDのIDまたは名前をエクスポートしている。
+
+```
+            VpcId: !ImportValue
+                "Fn::Sub": "${Prefix}-VPCID"
+```
+`!ImportValue`と`"Fn::Sub"`を使ってエクスポートしたIDまたは名前をインポートできる。エクスポートしたIDまたは名前をインポートするときは`Export`の`Name: !Sub`で指定した文字列と同じ文字列を指定する。
 
 ### 動的なリソース名をつける方法
 ```yaml
