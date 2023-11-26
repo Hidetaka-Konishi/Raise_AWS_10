@@ -444,6 +444,12 @@ EC2インスタンスにENIをアタッチする際に使用されるもので�
 ### AWS::EC2::VolumeAttachment
 追加のEBSが必要でなければ記述する必要はない。
 
+### AWS::IAM::Role
+#### Principal
+ポリシーを付与する対象のリソース
+#### Action
+ポリシーが付与されたリソースが行
+
 ### AWS::EC2::SecurityGroup
 #### GroupName
 作成済みのセキュリティーグループ名を記述することはできない。
