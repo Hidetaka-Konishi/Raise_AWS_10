@@ -87,195 +87,189 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "VPC"
 
 Parameters:
-  Prefix:
-    Type: String
-    Description: Fill in the part that hits the prefix to give a unique name.
+    Prefix:
+        Type: String
+        Description: Fill in the part that hits the prefix to give a unique name.
 
 Resources:
-    EC2VPC:
+    MyVPC:
         Type: "AWS::EC2::VPC"
         Properties:
             CidrBlock: "10.0.0.0/16"
             EnableDnsSupport: true
             EnableDnsHostnames: true
             InstanceTenancy: "default"
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub ${Prefix}-ec2vpc
+            Tags:
+                - Key: "Name"
+                  Value: !Sub ${Prefix}-vpc
 
-    EC2Subnet1:
+    PublicSubnet1:
         Type: "AWS::EC2::Subnet"
         Properties:
-            AvailabilityZone: !GetAtt EC2Subnet2.AvailabilityZone
+            AvailabilityZone: !Sub "${AWS::Region}a"
             CidrBlock: "10.0.16.0/20"
-            VpcId: !Ref EC2VPC
+            VpcId: !Ref MyVPC
             MapPublicIpOnLaunch: false
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-subnet-public2-${EC2Subnet2.AvailabilityZone}"
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-subnet-public-1-${AWS::Region}a"
 
-    EC2Subnet2:
+    PublicSubnet2:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !Sub "${AWS::Region}b"
+            CidrBlock: "10.0.0.0/20"
+            VpcId: !Ref MyVPC
+            MapPublicIpOnLaunch: false
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-subnet-public-2-${AWS::Region}b"
+
+    PrivateSubnet1:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !Sub "${AWS::Region}a"
+            CidrBlock: "10.0.128.0/20"
+            VpcId: !Ref MyVPC
+            MapPublicIpOnLaunch: false
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-subnet-private-1-${AWS::Region}a"
+
+    PrivateSubnet2:
         Type: "AWS::EC2::Subnet"
         Properties:
             AvailabilityZone: !Sub "${AWS::Region}b"
             CidrBlock: "10.0.144.0/20"
-            VpcId: !Ref EC2VPC
+            VpcId: !Ref MyVPC
             MapPublicIpOnLaunch: false
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-subnet-private2-${AWS::Region}b"
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-subnet-private-2-${AWS::Region}b"
 
-    EC2Subnet3:
-        Type: "AWS::EC2::Subnet"
-        Properties:
-            AvailabilityZone: !GetAtt EC2Subnet4.AvailabilityZone
-            CidrBlock: "10.0.128.0/20"
-            VpcId: !Ref EC2VPC
-            MapPublicIpOnLaunch: false
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-subnet-private1-${EC2Subnet4.AvailabilityZone}"
-
-    EC2Subnet4:
-        Type: "AWS::EC2::Subnet"
-        Properties:
-            AvailabilityZone: !Sub "${AWS::Region}a"
-            CidrBlock: "10.0.0.0/20"
-            VpcId: !Ref EC2VPC
-            MapPublicIpOnLaunch: false
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-subnet-public1-${AWS::Region}a"
-
-    EC2InternetGateway:
+    InternetGateway:
         Type: "AWS::EC2::InternetGateway"
         Properties:
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub ${Prefix}-igw
+            Tags:
+                - Key: "Name"
+                  Value: !Sub ${Prefix}-igw
 
-    EC2DHCPOptions:
+    DHCPOptions:
         Type: "AWS::EC2::DHCPOptions"
         Properties:
-            DomainName: "ec2.internal" 
+            DomainName: "ec2.internal"
             DomainNameServers:
                 - AmazonProvidedDNS
 
-    EC2VPCDHCPOptionsAssociation:
+    VPCDHCPOptionsAssociation:
         Type: "AWS::EC2::VPCDHCPOptionsAssociation"
         Properties:
-            DhcpOptionsId: !Ref EC2DHCPOptions
-            VpcId: !Ref EC2VPC
+            DhcpOptionsId: !Ref DHCPOptions
+            VpcId: !Ref MyVPC
 
-    EC2RouteTable1:
+    RouteTable1:
         Type: "AWS::EC2::RouteTable"
         Properties:
-            VpcId: !Ref EC2VPC
+            VpcId: !Ref MyVPC
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-rtb-public-1"
 
-    EC2RouteTable2:
+    RouteTable2:
         Type: "AWS::EC2::RouteTable"
         Properties:
-            VpcId: !Ref EC2VPC
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-rtb-private1-${EC2Subnet3.AvailabilityZone}"
+            VpcId: !Ref MyVPC
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-rtb-private-1"
 
-    EC2RouteTable3:
+    RouteTable3:
         Type: "AWS::EC2::RouteTable"
         Properties:
-            VpcId: !Ref EC2VPC
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub "raise10-rtb-private2-${EC2Subnet1.AvailabilityZone}"
+            VpcId: !Ref MyVPC
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-rtb-private-2"
 
-    EC2RouteTable4:
+    RouteTable4:
         Type: "AWS::EC2::RouteTable"
         Properties:
-            VpcId: !Ref EC2VPC
-            Tags: 
-              - 
-                Key: "Name"
-                Value: !Sub ${Prefix}-routetable
+            VpcId: !Ref MyVPC
+            Tags:
+                - Key: "Name"
+                  Value: !Sub "${Prefix}-rtb-public-2"
 
-    EC2Route:
+    Route:
         Type: "AWS::EC2::Route"
         Properties:
             DestinationCidrBlock: "0.0.0.0/0"
-            GatewayId: !Ref EC2InternetGateway
-            RouteTableId: !Ref EC2RouteTable4
+            GatewayId: !Ref InternetGateway
+            RouteTableId: !Ref RouteTable4
 
-    EC2VPCGatewayAttachment:
+    VPCGatewayAttachment:
         Type: "AWS::EC2::VPCGatewayAttachment"
         Properties:
-            InternetGatewayId: !Ref EC2InternetGateway
-            VpcId: !Ref EC2VPC
+            InternetGatewayId: !Ref InternetGateway
+            VpcId: !Ref MyVPC
 
-    EC2SubnetRouteTableAssociation1:
+    SubnetRouteTableAssociation1:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
-            RouteTableId: !Ref EC2RouteTable4
-            SubnetId: !Ref EC2Subnet4
+            RouteTableId: !Ref RouteTable4
+            SubnetId: !Ref PublicSubnet2
 
-    EC2SubnetRouteTableAssociation2:
+    SubnetRouteTableAssociation2:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
-            RouteTableId: !Ref EC2RouteTable3
-            SubnetId: !Ref EC2Subnet2
+            RouteTableId: !Ref RouteTable3
+            SubnetId: !Ref PrivateSubnet2
 
-    EC2SubnetRouteTableAssociation3:
+    SubnetRouteTableAssociation3:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
-            RouteTableId: !Ref EC2RouteTable4
-            SubnetId: !Ref EC2Subnet1
+            RouteTableId: !Ref RouteTable4
+            SubnetId: !Ref PublicSubnet1
 
-    EC2SubnetRouteTableAssociation4:
+    SubnetRouteTableAssociation4:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
-            RouteTableId: !Ref EC2RouteTable2
-            SubnetId: !Ref EC2Subnet3
+            RouteTableId: !Ref RouteTable2
+            SubnetId: !Ref PrivateSubnet1
 
-    VPCIDParameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/VPC-ID"
-          Type: "String"
-          Value: !Ref EC2VPC
+Outputs:
+    VPCID:
+        Description: "The ID of the created VPC"
+        Value: !Ref MyVPC
+        Export:
+            Name: !Sub "${Prefix}-VPCID"
 
-    SubnetId1Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/EC2Subnet1Id"
-          Type: "String"
-          Value: !Ref EC2Subnet1
+    SubnetId1:
+        Description: "The ID of the first subnet"
+        Value: !Ref PublicSubnet1
+        Export:
+            Name: !Sub "${Prefix}-SubnetId1-Public"
 
-    SubnetId2Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/EC2Subnet2Id"
-          Type: "String"
-          Value: !Ref EC2Subnet2
+    SubnetId2:
+        Description: "The ID of the second subnet"
+        Value: !Ref PrivateSubnet2
+        Export:
+            Name: !Sub "${Prefix}-SubnetId2-Private"
 
-    SubnetId3Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/EC2Subnet3Id"
-          Type: "String"
-          Value: !Ref EC2Subnet3
+    SubnetId3:
+        Description: "The ID of the third subnet"
+        Value: !Ref PrivateSubnet1
+        Export:
+            Name: !Sub "${Prefix}-SubnetId3-Private"
 
-    SubnetId4Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/EC2Subnet4Id"
-          Type: "String"
-          Value: !Ref EC2Subnet4
+    SubnetId4:
+        Description: "The ID of the fourth subnet"
+        Value: !Ref PublicSubnet2
+        Export:
+            Name: !Sub "${Prefix}-SubnetId4-Public"
+
+    RegionName:
+        Description: "Name of the AWS Region"
+        Value: !Ref "AWS::Region"
 ```
 ### AWS::EC2::VPC
 #### Value
@@ -302,76 +296,113 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "EC2"
 
 Parameters:
-  Prefix:
-    Type: String
-    Description: Fill in the part that hits the prefix to give a unique name.
-  VPCPrefix:
-    Type: String
-    Description: Fill in the prefixes listed in the VPC.
+    Prefix:
+        Type: String
+        Description: Fill in the prefix to give a unique name to all resources.
 
 Resources:
+    EC2KeyPair:
+        Type: "AWS::EC2::KeyPair"
+        Properties:
+            KeyName: !Sub "${Prefix}-keypair"
     EC2Instance:
         Type: "AWS::EC2::Instance"
         Properties:
             NetworkInterfaces:
                 - DeviceIndex: "0"
-                  SubnetId: !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet1Id}}"
+                  SubnetId: !ImportValue
+                      "Fn::Sub": "${Prefix}-SubnetId1-Public"
+                  GroupSet:
+                      - !Ref EC2SecurityGroup1
+                  AssociatePublicIpAddress: true
             ImageId: "ami-00c6177f250e07ec1"
             InstanceType: "t2.micro"
-            KeyName: "KrrXp2bKjU3chCVq"
-            AvailabilityZone: !Sub "${AWS::Region}b"
+            KeyName: !Ref EC2KeyPair
+            AvailabilityZone: !Sub "${AWS::Region}a"
             Tenancy: "default"
             EbsOptimized: false
             SourceDestCheck: true
-            BlockDeviceMappings: 
+            BlockDeviceMappings:
                 - DeviceName: "/dev/xvda"
-                  Ebs: 
+                  Ebs:
                       Encrypted: false
                       VolumeSize: 8
                       VolumeType: "gp2"
                       DeleteOnTermination: true
-            Tags: 
+            Tags:
                 - Key: "Name"
                   Value: !Sub ${Prefix}-ec2
-            HibernationOptions: 
+            HibernationOptions:
                 Configured: false
-            EnclaveOptions: 
+            EnclaveOptions:
                 Enabled: false
+            IamInstanceProfile: !Ref EC2InstanceProfile
+
+    EC2InstanceProfile:
+        Type: "AWS::IAM::InstanceProfile"
+        Properties:
+            Roles:
+                - !Ref EC2Role
+
+    EC2Role:
+        Type: "AWS::IAM::Role"
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: "Allow"
+                      Principal:
+                          Service: "ec2.amazonaws.com"
+                      Action: "sts:AssumeRole"
+            Path: "/"
+            Policies:
+                - PolicyName: "S3AccessPolicy"
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: "Allow"
+                            Action: "s3:*"
+                            Resource: "*"
 
     EC2SecurityGroup1:
         Type: "AWS::EC2::SecurityGroup"
         Properties:
             GroupDescription: "ec2-securitygroup1"
-            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
-            SecurityGroupIngress: 
-              - 
-                CidrIp: "0.0.0.0/0"
-                FromPort: 8080
-                IpProtocol: "tcp"
-                ToPort: 8080
-              - 
-                CidrIp: "59.87.81.226/32"
-                FromPort: 22
-                IpProtocol: "tcp"
-                ToPort: 22
-            SecurityGroupEgress: 
-              - 
-                CidrIp: "0.0.0.0/0"
-                IpProtocol: "-1"
+            VpcId: !ImportValue
+                "Fn::Sub": "${Prefix}-VPCID"
+            SecurityGroupIngress:
+                - CidrIp: "0.0.0.0/0"
+                  FromPort: 8080
+                  IpProtocol: "tcp"
+                  ToPort: 8080
+                - CidrIp: "0.0.0.0/0"
+                  FromPort: 22
+                  IpProtocol: "tcp"
+                  ToPort: 22
+            SecurityGroupEgress:
+                - CidrIp: "0.0.0.0/0"
+                  IpProtocol: "-1"
 
-    EC2SecurityGroup1Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/EC2-SecurityGroup1"
-          Type: "String"
-          Value: !Ref EC2SecurityGroup1
+Outputs:
+    InstanceId:
+        Description: "The ID of the EC2 Instance"
+        Value: !Ref EC2Instance
+        Export:
+            Name: !Sub "${Prefix}-InstanceId"
 
-    ALBTarget1Parameter:
-        Type: "AWS::SSM::Parameter"
-        Properties: 
-          Name: !Sub "/${Prefix}/alb-target1"
-          Type: "String"
-          Value: !Ref EC2Instance
+    InstancePublicIp:
+        Description: "Public IP of EC2 instance"
+        Value: !GetAtt EC2Instance.PublicIp
+
+    SecurityGroupId:
+        Description: "The ID of the EC2 Security Group"
+        Value: !Ref EC2SecurityGroup1
+        Export:
+            Name: !Sub "${Prefix}-SecurityGroupId"
+
+    KeyName:
+        Description: "Name of the generated key pair"
+        Value: !Ref EC2KeyPair
 ```
 ### AWS::EC2::Instance
 #### SubnetId
@@ -425,15 +456,9 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "RDS"
 
 Parameters:
-  Prefix:
-    Type: String
-    Description: Fill in the part that hits the prefix to give a unique name.
-  VPCPrefix:
-    Type: String
-    Description: Fill in the prefixes listed in the VPC.
-  EC2Prefix:
-    Type: String
-    Description: Fill in the prefixes listed in the EC2.
+    Prefix:
+        Type: String
+        Description: Fill in the prefix to give a unique name to all resources.
 
 Resources:
     RDSDBInstance:
@@ -446,10 +471,10 @@ Resources:
             DBInstanceClass: "db.t3.micro"
             Engine: "mysql"
             MasterUsername: "admin"
-            MasterUserPassword: '{{resolve:ssm-secure:picture-upload:1}}'
+            MasterUserPassword: "{{resolve:ssm-secure:rds_master_password}}"
             PreferredBackupWindow: "08:19-08:49"
             BackupRetentionPeriod: 1
-            AvailabilityZone: !Sub "${AWS::Region}b"
+            AvailabilityZone: !Sub "${AWS::Region}a"
             PreferredMaintenanceWindow: "mon:03:52-mon:04:22"
             MultiAZ: false
             EngineVersion: "8.0.33"
@@ -459,15 +484,14 @@ Resources:
             StorageType: "gp2"
             Port: "3306"
             StorageEncrypted: true
-            KmsKeyId: !Sub "arn:${AWS::Partition}:kms:${AWS::Region}:${AWS::AccountId}:key/623421e8-f259-4d7f-9b9b-f8bc1921d999"
             CopyTagsToSnapshot: true
             MonitoringInterval: 0
             EnableIAMDatabaseAuthentication: false
             EnablePerformanceInsights: false
             DeletionProtection: false
             DBSubnetGroupName: !Ref RDSDBSubnetGroup
-            VPCSecurityGroups: 
-              - !Ref RDSSecurityGroup1
+            VPCSecurityGroups:
+                - !Ref RDSSecurityGroup1
             DBParameterGroupName: "default.mysql8.0"
             OptionGroupName: "default:mysql-8-0"
             CACertificateIdentifier: "rds-ca-2019"
@@ -477,27 +501,34 @@ Resources:
         Properties:
             DBSubnetGroupDescription: "RDS-subnetgroup"
             DBSubnetGroupName: !Sub ${Prefix}-subnet-group
-            SubnetIds: 
-              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet2Id}}"
-              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet3Id}}"
+            SubnetIds:
+                - !ImportValue
+                  "Fn::Sub": "${Prefix}-SubnetId2-Private"
+                - !ImportValue
+                  "Fn::Sub": "${Prefix}-SubnetId3-Private"
 
     RDSSecurityGroup1:
         Type: "AWS::EC2::SecurityGroup"
         Properties:
             GroupDescription: "rds-securitygroup1"
-            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
-            SecurityGroupIngress: 
-              - 
-                SourceSecurityGroupId: !Sub "{{resolve:ssm:/${EC2Prefix}/EC2-SecurityGroup1}}"
-                SourceSecurityGroupOwnerId: !Ref AWS::AccountId
-                Description: "3306 tcp"
-                FromPort: 3306
-                IpProtocol: "tcp"
-                ToPort: 3306
-            SecurityGroupEgress: 
-              - 
-                CidrIp: "0.0.0.0/0"
-                IpProtocol: "-1"
+            VpcId: !ImportValue
+                "Fn::Sub": "${Prefix}-VPCID"
+            SecurityGroupIngress:
+                - SourceSecurityGroupId: !ImportValue
+                      "Fn::Sub": "${Prefix}-SecurityGroupId"
+                  SourceSecurityGroupOwnerId: !Ref AWS::AccountId
+                  Description: "3306 tcp"
+                  FromPort: 3306
+                  IpProtocol: "tcp"
+                  ToPort: 3306
+            SecurityGroupEgress:
+                - CidrIp: "0.0.0.0/0"
+                  IpProtocol: "-1"
+
+Outputs:
+    RDSInstanceEndpoint:
+        Description: "The endpoint address of the RDS instance"
+        Value: !GetAtt RDSDBInstance.Endpoint.Address
 ```
 ### AWS::RDS::DBInstance
 #### DeletionPolicy
@@ -546,15 +577,9 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "ALB"
 
 Parameters:
-  Prefix:
-    Type: String
-    Description: Fill in the part that hits the prefix to give a unique name.
-  VPCPrefix:
-    Type: String
-    Description: Fill in the prefixes listed in the VPC.
-  EC2Prefix:
-    Type: String
-    Description: Fill in the prefixes listed in the EC2.
+    Prefix:
+        Type: String
+        Description: Fill in the prefix to give a unique name to all resources.
 
 Resources:
     ElasticLoadBalancingV2LoadBalancer:
@@ -563,49 +588,39 @@ Resources:
             Name: !Sub ${Prefix}-alb
             Scheme: "internet-facing"
             Type: "application"
-            Subnets: 
-              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet1Id}}"
-              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet4Id}}"
-            SecurityGroups: 
-              - !Ref ALBSecurityGroup1
+            Subnets:
+                - !ImportValue
+                  "Fn::Sub": "${Prefix}-SubnetId1-Public"
+                - !ImportValue
+                  "Fn::Sub": "${Prefix}-SubnetId4-Public"
+            SecurityGroups:
+                - !Ref ALBSecurityGroup1
             IpAddressType: "ipv4"
-            LoadBalancerAttributes: 
-              - 
-                Key: "access_logs.s3.enabled"
-                Value: "false"
-              - 
-                Key: "idle_timeout.timeout_seconds"
-                Value: "60"
-              - 
-                Key: "deletion_protection.enabled"
-                Value: "false"
-              - 
-                Key: "routing.http2.enabled"
-                Value: "true"
-              - 
-                Key: "routing.http.drop_invalid_header_fields.enabled"
-                Value: "false"
-              - 
-                Key: "routing.http.xff_client_port.enabled"
-                Value: "false"
-              - 
-                Key: "routing.http.preserve_host_header.enabled"
-                Value: "false"
-              - 
-                Key: "routing.http.xff_header_processing.mode"
-                Value: "append"
-              - 
-                Key: "load_balancing.cross_zone.enabled"
-                Value: "true"
-              - 
-                Key: "routing.http.desync_mitigation_mode"
-                Value: "defensive"
-              - 
-                Key: "waf.fail_open.enabled"
-                Value: "false"
-              - 
-                Key: "routing.http.x_amzn_tls_version_and_cipher_suite.enabled"
-                Value: "false"
+            LoadBalancerAttributes:
+                - Key: "access_logs.s3.enabled"
+                  Value: "false"
+                - Key: "idle_timeout.timeout_seconds"
+                  Value: "60"
+                - Key: "deletion_protection.enabled"
+                  Value: "false"
+                - Key: "routing.http2.enabled"
+                  Value: "true"
+                - Key: "routing.http.drop_invalid_header_fields.enabled"
+                  Value: "false"
+                - Key: "routing.http.xff_client_port.enabled"
+                  Value: "false"
+                - Key: "routing.http.preserve_host_header.enabled"
+                  Value: "false"
+                - Key: "routing.http.xff_header_processing.mode"
+                  Value: "append"
+                - Key: "load_balancing.cross_zone.enabled"
+                  Value: "true"
+                - Key: "routing.http.desync_mitigation_mode"
+                  Value: "defensive"
+                - Key: "waf.fail_open.enabled"
+                  Value: "false"
+                - Key: "routing.http.x_amzn_tls_version_and_cipher_suite.enabled"
+                  Value: "false"
 
     ElasticLoadBalancingV2Listener1:
         Type: "AWS::ElasticLoadBalancingV2::Listener"
@@ -613,10 +628,9 @@ Resources:
             LoadBalancerArn: !Ref ElasticLoadBalancingV2LoadBalancer
             Port: 80
             Protocol: "HTTP"
-            DefaultActions: 
-              - 
-                TargetGroupArn: !Ref ElasticLoadBalancingV2TargetGroup1
-                Type: "forward"
+            DefaultActions:
+                - TargetGroupArn: !Ref ElasticLoadBalancingV2TargetGroup1
+                  Type: "forward"
 
     ElasticLoadBalancingV2TargetGroup1:
         Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
@@ -630,72 +644,64 @@ Resources:
             HealthCheckTimeoutSeconds: 5
             UnhealthyThresholdCount: 2
             TargetType: "instance"
-            Matcher: 
+            Matcher:
                 HttpCode: "200"
             HealthyThresholdCount: 5
-            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
+            VpcId: !ImportValue
+                "Fn::Sub": "${Prefix}-VPCID"
             Name: !Sub ${Prefix}-alb-targetgroup1
             HealthCheckEnabled: true
-            TargetGroupAttributes:       
-              - 
-                Key: "target_group_health.unhealthy_state_routing.minimum_healthy_targets.count"
-                Value: "1"
-              - 
-                Key: "stickiness.enabled"
-                Value: "false"
-              - 
-                Key: "target_group_health.unhealthy_state_routing.minimum_healthy_targets.percentage"
-                Value: "off"
-              - 
-                Key: "deregistration_delay.timeout_seconds"
-                Value: "300"
-              - 
-                Key: "target_group_health.dns_failover.minimum_healthy_targets.count"
-                Value: "1"
-              - 
-                Key: "stickiness.app_cookie.cookie_name"
-                Value: ""
-              - 
-                Key: "stickiness.type"
-                Value: "lb_cookie"
-              - 
-                Key: "stickiness.lb_cookie.duration_seconds"
-                Value: "86400"
-              - 
-                Key: "slow_start.duration_seconds"
-                Value: "0"
-              - 
-                Key: "stickiness.app_cookie.duration_seconds"
-                Value: "86400"
-              - 
-                Key: "target_group_health.dns_failover.minimum_healthy_targets.percentage"
-                Value: "off"
-              - 
-                Key: "load_balancing.cross_zone.enabled"
-                Value: "use_load_balancer_configuration"
-              - 
-                Key: "load_balancing.algorithm.type"
-                Value: "round_robin"
-            Targets: 
-              - 
-                Id: !Sub "{{resolve:ssm:/${EC2Prefix}/alb-target1}}"
-                Port: 8080
+            TargetGroupAttributes:
+                - Key: "target_group_health.unhealthy_state_routing.minimum_healthy_targets.count"
+                  Value: "1"
+                - Key: "stickiness.enabled"
+                  Value: "false"
+                - Key: "target_group_health.unhealthy_state_routing.minimum_healthy_targets.percentage"
+                  Value: "off"
+                - Key: "deregistration_delay.timeout_seconds"
+                  Value: "300"
+                - Key: "target_group_health.dns_failover.minimum_healthy_targets.count"
+                  Value: "1"
+                - Key: "stickiness.app_cookie.cookie_name"
+                  Value: ""
+                - Key: "stickiness.type"
+                  Value: "lb_cookie"
+                - Key: "stickiness.lb_cookie.duration_seconds"
+                  Value: "86400"
+                - Key: "slow_start.duration_seconds"
+                  Value: "0"
+                - Key: "stickiness.app_cookie.duration_seconds"
+                  Value: "86400"
+                - Key: "target_group_health.dns_failover.minimum_healthy_targets.percentage"
+                  Value: "off"
+                - Key: "load_balancing.cross_zone.enabled"
+                  Value: "use_load_balancer_configuration"
+                - Key: "load_balancing.algorithm.type"
+                  Value: "round_robin"
+            Targets:
+                - Id: !ImportValue
+                      "Fn::Sub": "${Prefix}-InstanceId"
+                  Port: 8080
 
     ALBSecurityGroup1:
         Type: "AWS::EC2::SecurityGroup"
         Properties:
             GroupDescription: "alb-securitygroup1"
-            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
-            SecurityGroupIngress: 
-              - 
-                CidrIp: "0.0.0.0/0"
-                FromPort: 80
-                IpProtocol: "tcp"
-                ToPort: 80
-            SecurityGroupEgress: 
-              - 
-                CidrIp: "0.0.0.0/0"
-                IpProtocol: "-1"
+            VpcId: !ImportValue
+                "Fn::Sub": "${Prefix}-VPCID"
+            SecurityGroupIngress:
+                - CidrIp: "0.0.0.0/0"
+                  FromPort: 80
+                  IpProtocol: "tcp"
+                  ToPort: 80
+            SecurityGroupEgress:
+                - CidrIp: "0.0.0.0/0"
+                  IpProtocol: "-1"
+
+Outputs:
+    AlbDnsName:
+        Description: "DNS Name of the Application Load Balancer"
+        Value: !GetAtt ElasticLoadBalancingV2LoadBalancer.DNSName
 ```
 ### AWS::ElasticLoadBalancingV2::LoadBalancer
 #### Subnets
@@ -723,39 +729,36 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "S3"
 
 Parameters:
-  Prefix:
-    Type: String
-    Description: Fill in the part that hits the prefix to give a unique name.
+    Prefix:
+        Type: String
+        Description: Fill in the part that hits the prefix to give a unique name.
 
 Resources:
     S3Bucket:
         Type: "AWS::S3::Bucket"
         Properties:
-            BucketName: !Sub ${Prefix}-s3buket
-            BucketEncryption: 
-                ServerSideEncryptionConfiguration: 
-                  - 
-                    ServerSideEncryptionByDefault: 
-                        SSEAlgorithm: "AES256"
-                    BucketKeyEnabled: true
-            CorsConfiguration: 
-                CorsRules: 
-                  - 
-                    AllowedHeaders: 
-                      - "*"
-                    AllowedMethods: 
-                      - "GET"
-                      - "PUT"
-                      - "POST"
-                      - "DELETE"
-                      - "HEAD"
-                    AllowedOrigins: 
-                      - "*"
-            OwnershipControls: 
-                Rules: 
-                  - 
-                    ObjectOwnership: "BucketOwnerEnforced"
-            PublicAccessBlockConfiguration: 
+            BucketName: !Sub ${Prefix}-s3buket-${AWS::AccountId}
+            BucketEncryption:
+                ServerSideEncryptionConfiguration:
+                    - ServerSideEncryptionByDefault:
+                          SSEAlgorithm: "AES256"
+                      BucketKeyEnabled: true
+            CorsConfiguration:
+                CorsRules:
+                    - AllowedHeaders:
+                          - "*"
+                      AllowedMethods:
+                          - "GET"
+                          - "PUT"
+                          - "POST"
+                          - "DELETE"
+                          - "HEAD"
+                      AllowedOrigins:
+                          - "*"
+            OwnershipControls:
+                Rules:
+                    - ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration:
                 BlockPublicAcls: true
                 BlockPublicPolicy: true
                 IgnorePublicAcls: true
@@ -764,11 +767,16 @@ Resources:
     S3StorageLens:
         Type: "AWS::S3::StorageLens"
         Properties:
-            StorageLensConfiguration: 
-                AccountLevel: 
+            StorageLensConfiguration:
+                AccountLevel:
                     BucketLevel: {}
                 Id: !Sub ${Prefix}-s3-StorageLens
                 IsEnabled: true
+
+Outputs:
+    S3BucketName:
+        Description: "Name of the S3 Bucket"
+        Value: !Ref S3Bucket
 ```
 ### AWS::S3::Bucket
 #### ServerSideEncryptionByDefault
