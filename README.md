@@ -445,10 +445,16 @@ EC2インスタンスにENIをアタッチする際に使用されるもので�
 追加のEBSが必要でなければ記述する必要はない。
 
 ### AWS::IAM::Role
+#### AssumeRolePolicyDocument
+`AssumeRolePolicyDocument`はこのIAMロールがどのAWSサービスにアタッチするかを指定するセクション。
 #### Principal
-ポリシーを付与する対象のリソース
+IAMロールを付与する対象のリソース
 #### Action
-ポリシーが付与されたリソースが行
+`AssumeRolePolicyDocument`内のコードで使用されている`Action`は特別なことがない限り`sts:AssumeRole`を指定する。`sts:AssumeRole`は付与されたIAMロールを引き受けるアクション。
+#### Path
+作成したIAMロールを整理するフォルダのようなものであり、`/service-role/`のように指定すると`service-role`というフォルダにIAMロールが収納される。デフォルトは`/`になる。
+#### Resource
+`Action: "s3:*"`と指定している場合、`Resource`はどのS3バケットに`S3FullAccess`が適用されるかを定義する。`Resource`を"*"とするとAWSアカウント内のすべてのS3バケットに`S3FullAccess`が適用される。
 
 ### AWS::EC2::SecurityGroup
 #### GroupName
