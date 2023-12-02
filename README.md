@@ -1,28 +1,28 @@
 # CloudFormationテンプレートの中で扱うAWSリソースのパスワードをパラメータストアで管理する
-1. マネジメントコンソールの検索欄に「Systems Manager」と検索して選択します。
-2. 左のサイドバーの「パラメータストア」→「パラメータの作成」をクリックします。
-3. 「名前」で名前を設定し、「タイプ」で「安全な文字列」を選択します。「値」で管理してほしいAWSリソースのパスワードを入力します。
-4. 一番下までスクロールして、「パラメータを作成」をクリックします。
-5. `MasterUserPassword: "{{resolve:ssm-secure:[パラメータの名前]}}"` のようにテンプレートに記載します。
+1. マネジメントコンソールの検索欄に「Systems Manager」と検索して選択する。
+2. 左のサイドバーの「パラメータストア」→「パラメータの作成」をクリックする。
+3. 「名前」で名前を設定し、「タイプ」で「安全な文字列」を選択する。「値」で管理してほしいAWSリソースの情報を入力する。
+4. 一番下までスクロールして、「パラメータを作成」をクリックする。
+5. `MasterUserPassword: "{{resolve:ssm-secure:[パラメータの名前]}}"` のようにテンプレートに記載する。
 
 # CloudFormationテンプレートの作成
 ## 基礎知識
-### 論理ID
+### `論理ID`
 プログラミングでいう変数のようなもの。
 
-### Outputs
+### `Outputs`
 他のCloudFormationテンプレートや`.circle/config.yml`で情報を取得できるように出力させる情報をこのブロック内に記述する。
 
-### !Ref
+### `!Ref`
 論理IDのIDまたは名前を取得するもの。
 
-### !Sub
+### `!Sub`
 動的に変化する文字列を扱う際に使うもの。例えば、`!Sub ${Prefix}-s3buket`や`!Sub "raise10-subnet-public2-${EC2Subnet2.AvailabilityZone}"`のようにして利用する。
 
-### !GetAtt
+### `!GetAtt`
 論理IDの指定したリソース名からそのリソース情報を取得するもの。文法は`!GetAtt [論理ID].[リソース名]`となる。例えば、`!GetAtt EC2Subnet2.AvailabilityZone`とすることで`EC2Subnet2`の`AvailabilityZone`の情報を取得することができる。
 
-### Export
+### `Export`
 `!Ref`で取得したIDまたは名前を他のCloudFormationテンプレートで参照可能にするもの。文法は以下のようになる。
 
 ```
@@ -41,7 +41,7 @@ Outputs:
 ```
 `!ImportValue`と`"Fn::Sub"`を使ってエクスポートしたIDまたは名前をインポートできる。エクスポートしたIDまたは名前をインポートするときは`Export`の`Name: !Sub`で指定した文字列と同じ文字列を指定する。
 
-### 動的なリソース名をつける方法
+### 動的なリソース名をつける
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "S3"
@@ -62,7 +62,7 @@ Resources:
 
 ![](./image/parameter.png)
 
-### 動的な値を他のテンプレートでパラメータストアから参照する方法
+### 動的な値を他のテンプレートでパラメータストアから参照する
 
 まず、定義する側のテンプレートで以下を記述する。
 ```yaml
@@ -271,23 +271,23 @@ Outputs:
         Description: "Name of the AWS Region"
         Value: !Ref "AWS::Region"
 ```
-### AWS::EC2::VPC
-#### Value
+### `AWS::EC2::VPC`
+#### `Value`
 ここで記述した名前はVPC本体の名前になる。
 
-### AWS::EC2::Subnet
-#### MapPublicIpOnLaunch
+### `AWS::EC2::Subnet`
+#### `MapPublicIpOnLaunch`
 EC2インスタンスがそのサブネットに配置される際に、パブリックIPアドレスを自動で割り当てるかを指定するもの。
-####  AvailabilityZone
+####  `AvailabilityZone`
 `!Sub "${AWS::Region}b"`の`AWS::Region`はスタックが作成されたリージョン名が入る。
 
-### AWS::EC2::RouteTable
+### `AWS::EC2::RouteTable`
 AWSが自動的に一つルートテーブルを作成するため、実際に作成されたVPCのルートテーブルの数はテンプレートより一つ多くなる。
 
-### AWS::EC2::Route
+### `AWS::EC2::Route`
 特定のルートテーブルにルートを追加するために使用するもの。
 
-### AWS::EC2::VPCGatewayAttachment
+### `AWS::EC2::VPCGatewayAttachment`
 VPCにインターネットゲートウェイまたは仮想プライベートゲートウェイを関連づけるためのもの。
 
 ## EC2のコード解説
@@ -404,62 +404,62 @@ Outputs:
         Description: "Name of the generated key pair"
         Value: !Ref EC2KeyPair
 ```
-### AWS::EC2::Instance
-#### SubnetId
+### `AWS::EC2::Instance`
+#### `SubnetId`
 EC2インスタンスをVPCのどのサブネットに配置するのかを指定する。
-#### GroupSet
+#### `GroupSet`
 セキュリティグループを指定することで実際に反映される。
-#### AssociatePublicIpAddress
+#### `AssociatePublicIpAddress`
 パブリックIPv4アドレスを自動で取得するのかを設定する。特別なことがない限り`true`にする。
-#### EbsOptimized
+#### `EbsOptimized`
 「EBS最適化」のことであり、EC2インスタンスの情報が書かれたページの「ストレージ」で確認することができる。
-#### SourceDestCheck
+#### `SourceDestCheck`
 EC2インスタンスの情報が書かれたページの「ネットワークインターフェース」の「送信元/送信先チェック」のこと。
-#### SnapshotId
+#### `SnapshotId`
 既存のスナップショットIDを使用しないのであれば記述する必要はない。
-#### Encrypted
+#### `Encrypted`
 「暗号化済み」のこと。
-#### Value
+#### `Value`
 EC2インスタンスの名前を指定する。
-#### HibernationOptions
+#### `HibernationOptions`
 「停止 - 休止動作」のこと。
-#### EnclaveOptions
+#### `EnclaveOptions`
 「Enclaves のサポート」のこと。
 
-### AWS::EC2::NetworkInterfaceAttachment
+### `AWS::EC2::NetworkInterfaceAttachment`
 EC2インスタンスにENIをアタッチする際に使用されるもので、`AWS::EC2::Instance`で`NetworkInterfaces`を設定していれば記述する必要はない。
-#### NetworkInterfaceId
+#### `NetworkInterfaceId`
 アタッチするENIのID。ここで指定するENIは動的に変化するので、`!Ref EC2NetworkInterface`のようにして参照させる必要がある。
 
-### AWS::EC2::Volume
-#### SnapshotId
+### `AWS::EC2::Volume`
+#### `SnapshotId`
 `AWS::EC2::Instance`の`BlockDeviceMappings`で`Ebs`の`SnapshotId`を指定した場合は指定する必要はない。
 
-### AWS::EC2::NetworkInterface
+### `AWS::EC2::NetworkInterface`
 `AWS::EC2::Instance`で`NetworkInterfaces`を設定していれば記述する必要はない。
 
-### AWS::EC2::Volume
+### `AWS::EC2::Volume`
 追加のEBSが必要でなければ記述する必要はない。
 
-### AWS::EC2::VolumeAttachment
+### `AWS::EC2::VolumeAttachment`
 追加のEBSが必要でなければ記述する必要はない。
 
-### AWS::IAM::Role
-#### AssumeRolePolicyDocument
+### `AWS::IAM::Role`
+#### `AssumeRolePolicyDocument`
 `AssumeRolePolicyDocument`はこのIAMロールがどのAWSサービスにアタッチするかを指定するセクション。
-#### Principal
+#### `Principal`
 IAMロールを付与する対象のリソース
-#### Action
+#### `Action`
 `AssumeRolePolicyDocument`内のコードで使用されている`Action`は特別なことがない限り`sts:AssumeRole`を指定する。`sts:AssumeRole`は付与されたIAMロールを引き受けるアクション。
-#### Path
+#### `Path`
 作成したIAMロールを整理するフォルダのようなものであり、`/service-role/`のように指定すると`service-role`というフォルダにIAMロールが収納される。デフォルトは`/`になる。
-#### Resource
+#### `Resource`
 `Action: "s3:*"`と指定している場合、`Resource`はどのS3バケットに`S3FullAccess`が適用されるかを定義する。`Resource`を"*"とするとAWSアカウント内のすべてのS3バケットに`S3FullAccess`が適用される。
 
-### AWS::EC2::SecurityGroup
-#### GroupName
+### `AWS::EC2::SecurityGroup`
+#### `GroupName`
 作成済みのセキュリティーグループ名を記述することはできない。
-#### IpProtocol
+#### `IpProtocol`
 -1はすべてのプロトコルを意味する。
 
 ## RDSのコード解説
@@ -542,8 +542,8 @@ Outputs:
         Description: "The endpoint address of the RDS instance"
         Value: !GetAtt RDSDBInstance.Endpoint.Address
 ```
-### AWS::RDS::DBInstance
-#### DeletionPolicy
+### `AWS::RDS::DBInstance`
+#### `DeletionPolicy`
 スタックが削除される際にリソースをどのようにするかを定義する。
 
 Delete：スタックが削除されたときにリソースも削除する。
@@ -552,7 +552,7 @@ Retain：スタックが削除されたときにリソースを保持する。�
 
 Snapshot：RDSやEBSのスタック削除時にリソースも削除されるが同時にスナップショットを作成する。
 
-#### UpdateReplacePolicy
+#### `UpdateReplacePolicy`
 
 スタックのリソースが更新されたときにリソースををどのようにするかを定義する。
 
@@ -562,25 +562,25 @@ Retain：更新前のリソースが保管される。手動で削除しない�
 
 Snapshot：更新前のRDSやEBSのスナップショットを作成する。
 
-#### AllocatedStorage
+#### `AllocatedStorage`
 「ストレージ」のこと。
-#### MasterUserPassword
+#### `MasterUserPassword`
 RDSのマスターパスワードを記述する。ただ、そのまま記述することはできないので上記の「CloudFormationテンプレートの中で扱うAWSリソースのパスワードをパラメータストアで管理する」に沿ってパスワードを暗号化して管理する必要がある。
-#### BackupRetentionPeriod
+#### `BackupRetentionPeriod`
 「自動バックアップ」のことであり、指定する数字はバックアップされる日数を意味する。
-#### PreferredMaintenanceWindow
+#### `PreferredMaintenanceWindow`
 RDSインスタンスの30分間のメンテナンスを行う時間帯を指定する。マネジメントコンソール上ではこの情報を確認することはできない。
-#### KmsKeyId
+#### `KmsKeyId`
 `arn:aws:kms~`の`aws`の部分を削除して、`${AWS::Partition}`に書き換える必要がある。これにより、異なるリージョンでもリソースを利用することができる。
-#### MonitoringInterval
+#### `MonitoringInterval`
 RDSインスタンスの情報が書かれたページの「モニタリング」でデータが取得されていない場合は0となる。
-#### CACertificateIdentifier
+#### `CACertificateIdentifier`
 「認証機関」のこと。
-#### SourceSecurityGroupOwnerId
+#### `SourceSecurityGroupOwnerId`
 セキュリティグループのIDはAWS全体で一意であるため、どのAWSアカウントでスタックをデプロイしても指定したセキュリティグループのIDを動的に使用できるようにするために`AWS::AccountId`と記述する。
 
-### AWS::RDS::DBSubnetGroup
-#### DBSubnetGroupName
+### `AWS::RDS::DBSubnetGroup`
+#### `DBSubnetGroupName`
 既に作成済みのDBサブネットグループは記述することができない。
 
 ## ALBのコード解説
@@ -715,24 +715,24 @@ Outputs:
         Description: "DNS Name of the Application Load Balancer"
         Value: !GetAtt ElasticLoadBalancingV2LoadBalancer.DNSName
 ```
-### AWS::ElasticLoadBalancingV2::LoadBalancer
-#### Subnets
+### `AWS::ElasticLoadBalancingV2::LoadBalancer`
+#### `Subnets`
 スキームが`Internet-facing`に設定されている場合は、インターネットを利用して通信するのでここで指定するサブネットはパブリックサブネットになる。
 
-### AWS::ElasticLoadBalancingV2::Listener
-#### Type
+### `AWS::ElasticLoadBalancingV2::Listener`
+#### `Type`
 `forward`は転送を意味する。
 
-### AWS::ElasticLoadBalancingV2::TargetGroup
-#### HealthCheckEnabled
+### `AWS::ElasticLoadBalancingV2::TargetGroup`
+#### `HealthCheckEnabled`
 マネジメントコンソール上では確認することができないが通常はtrueにすることが推奨されている。
-#### stickiness.enabled
+#### `stickiness.enabled`
 「維持設定」のこと。
-#### stickiness.type
+#### `stickiness.type`
 マネジメントコンソール上では確認することができない。ここでは、スティッキネスの種類を指定する。スティッキネスは連続する通信を同じサーバーに送信する機能。`lb_cookie`はALBが自動で生成するcookieを使用してスティッキネスを実現するということ。
-#### stickiness.lb_cookie.duration_seconds
+#### `stickiness.lb_cookie.duration_seconds`
 ALBが自動で生成するcookieを使用したスティッキネスの有効期限。ここで指定する数字は秒数を意味する。
-#### stickiness.app_cookie.duration_seconds
+#### `stickiness.app_cookie.duration_seconds`
 アプリケーションが生成するcookieを使用したスティッキネスの有効期限。
 
 ## S3のコード解説
@@ -790,19 +790,19 @@ Outputs:
         Description: "Name of the S3 Bucket"
         Value: !Ref S3Bucket
 ```
-### AWS::S3::Bucket
-#### ServerSideEncryptionByDefault
+### `AWS::S3::Bucket`
+#### `ServerSideEncryptionByDefault`
 「デフォルトの暗号化」のこと。
-#### SSEAlgorithm
+#### `SSEAlgorithm`
 `AES256`を指定することでSSE-S3、`aws:kms`を指定することでSSE-KMSの暗号化タイプになる。
 
-### AWS::S3::StorageLens
-#### BucketLevel
+### `AWS::S3::StorageLens`
+#### `BucketLevel`
 情報を取得したいバケットを指定する。{}は何も設定されていないデフォルトの状態で、このデフォルトの状態はすべてのバケットに対して情報を取得できることを意味する。
-#### IsEnabled
+#### `IsEnabled`
 StorageLensを作成した後に、実際にそれを有効にするのかを指定する。
 
-# CloudFormationでスタックを作成する手順
+# CloudFormationでスタックを作成する
 1. マネジメントコンソールから「CloudFormation」と検索し、選択します。
 2. 「スタックの作成」をクリックする。
 3. 「テンプレートの指定」の項目では、「テンプレートファイルのアップロード」を選択し、「ファイルの選択」をクリックしてテンプレートになるコードのファイルを選択する。
